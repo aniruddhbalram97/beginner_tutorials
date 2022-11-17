@@ -30,11 +30,7 @@ cd ..
 colcon build --packages-select cpp_pubsub
 ```
 
-<<<<<<< HEAD
-### Steps to Run:
-=======
 ### Run:
->>>>>>> Week10_HW
 
 ### Run the publisher:
 
