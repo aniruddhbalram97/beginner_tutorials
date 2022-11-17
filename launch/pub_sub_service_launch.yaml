@@ -1,0 +1,25 @@
+launch:
+
+# frequency argument that can be set from command-line
+
+- arg:
+    name: "freq"
+    default: "1.0"
+
+# to start publisher node 
+- node:
+    pkg: "cpp_pubsub"
+    exec: "talker"
+    name: "sim"
+    namespace: "minimal_publisher"
+    param:
+    -
+      name: "freq"
+      value: "$(var freq)"
+
+# start subscriber and use args to set parameters
+- node:
+    pkg: "cpp_pubsub"
+    exec: "listener"
+    name: "sim"
+    namespace: "minimal_subscriber"
