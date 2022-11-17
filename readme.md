@@ -32,17 +32,24 @@ colcon build --packages-select cpp_pubsub
 ```
 
 ### Steps to Run:
+
+### Run the publisher:
+
 ```
 # Open a terminal and navigate to your ROS2 Workspace
-
-# Run the Publisher
 . install/setup.bash
 ros2 run cpp_pubsub talker
+```
 
-# Open another terminal and navigate to your ROS2 Workspace
+### Run the subscriber:
 
-# Run the Subscriber
+```
+# Open a terminal and navigate to your ROS2 Workspace
 . install/setup.bash
 ros2 run cpp_pubsub listener
 ```
 
+### Results
+The results are present in the 'results' directory
+    - cpplint.txt
+    - cppcheck.txt
