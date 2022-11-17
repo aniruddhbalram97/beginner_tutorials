@@ -1,37 +1,34 @@
-## Beginner Tutorial - ENPM808X
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+# Beginner Tutorial - ENPM808X
 
-### Description
+## Overview
 
 This repository contains basic publisher/subscriber nodes
 
-### Dependencies
+## Dependencies/Assumptions
 
-- ROS2: 
-    - Humble
+- OS: Ubuntu 20.04
+- ROS2: Humble
 - Packages:
     - ament
     - CMake
     - colcon
-- Minimum Requirement
-    - Must have a ROS2 workspace setup before running this package
+    - rclcpp
+    - std_msgs
 
-### Steps to Install 
+## Build and Run:
+- Source ROS2 Underlayh (depends on how you've installed ROS2)
+- Navigate to your < ROS2 Workspace >/src/
 
-Navigate to your < ROS2 Workspace >/src/: 
+### Build:
 ```
-# source the underlay ros2 - depends on how you've installed ros
-# source the overlay ros2 - depends on how you've setup ros workspace
-
+cd src/
 git clone https://github.com/aniruddhbalram97/beginner_tutorials.git
-git checkout ros_pub_sub
-# go to base of the workspace and build package
 cd ..
 colcon build --packages-select cpp_pubsub
-. install/setup.bash
-
 ```
 
-### Steps to Run:
+### Run:
 
 ### Run the publisher:
 
@@ -49,7 +46,8 @@ ros2 run cpp_pubsub talker
 ros2 run cpp_pubsub listener
 ```
 
-### Results
+## Results
 The results are present in the 'results' directory
+
     - cpplint.txt
     - cppcheck.txt
