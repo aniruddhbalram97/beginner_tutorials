@@ -3,9 +3,9 @@
 <package format="3">
   <name>cpp_pubsub</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>Package contains basic publisher/subscriber integrated with server/client</description>
   <maintainer email="abalram1@umd.edu">abalram1</maintainer>
-  <license>TODO: License declaration</license>
+  <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
   <depend>rclcpp</depend>

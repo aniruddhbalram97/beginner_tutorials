@@ -1,0 +1,12 @@
+CPPLINT:
+
+publisher_member_function.cpp:
+publisher_member_function.cpp:65:  Use int16/int64/etc, rather than the C type long  [runtime/int] [4]
+Done processing publisher_member_function.cpp
+
+subscriber_member_function.cpp:
+Done processing subscriber_member_function.cpp
+
+add_two_ints_client.cpp
+Done processing add_two_ints_client.cpp
+

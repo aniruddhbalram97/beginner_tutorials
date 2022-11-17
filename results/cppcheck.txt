@@ -1,0 +1,13 @@
+CPPCHECK:
+
+publisher_member_function.cpp
+Checking publisher_member_function.cpp ...
+nofile:0:0: information: Cppcheck cannot find all the include files (use --check-config for details) [missingInclude]
+
+subscriber_member_function.cpp:
+Checking subscriber_member_function.cpp ...
+nofile:0:0: information: Cppcheck cannot find all the include files (use --check-config for details) [missingInclude]
+
+add_two_ints_client.cpp:
+Checking add_two_ints_client.cpp ...
+nofile:0:0: information: Cppcheck cannot find all the include files (use --check-config for details) [missingInclude]

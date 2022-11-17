@@ -1,16 +1,38 @@
-// Copyright 2016 Open Source Robotics Foundation, Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/************************
+ * Copyright (c) 2022 Aniruddh Balram
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ ************************/
+/**
+ *  @file    publisher_member_function.cpp
+ *  @author  Aniruddh Balram
+ *  @date    11/16/2022
+ *  @version 2.0
+ *
+ *  @brief This file is a combined publisher/server
+ *
+ */
 
 #include <chrono>
 #include <functional>
@@ -23,20 +45,33 @@
 
 using namespace std::chrono_literals;
 
-/* This example creates a subclass of Node and uses std::bind() to register a
- * member function as a callback from the timer. */
 
+/**
+ * @brief MinimalPublisher class which contains publisher/server constructor and methods
+ * 
+ */
 class MinimalPublisher : public rclcpp::Node {
  public:
   std::string base_message = "Hi there! Waiting on numbers to be summed!";
   MinimalPublisher()
   : Node("minimal_publisher"), count_(0) {
-    publisher_ = this->create_publisher<std_msgs::msg::String>("topic", 10);
+    // Parameter for publisher frequency
+    auto freq_p = rcl_interfaces::msg::ParameterDescriptor();
+    freq_p.description = "Sets the frequency in Hz";
+    this->declare_parameter("freq",3.0,freq_p);
+    auto frequency =
+      this->get_parameter("freq").
+      get_parameter_value().get<std::float_t>();
+    // Publisher initialization
+    publisher_ = this->create_publisher<std_msgs::msg
+    ::String>("topic", 10);
+    // Set timer to 500ms(calls callback twice in a second)
     timer_ = this->create_wall_timer(
       500ms, std::bind(&MinimalPublisher::timer_callback, this));
     auto serviceCallbackPtr =
         std::bind(&MinimalPublisher::add_two_integers, this,
                   std::placeholders::_1, std::placeholders::_2);
+    // Server initialization
     service_ = create_service<example_interfaces::srv::AddTwoInts>(
         "add_two_ints", serviceCallbackPtr);
     if (this->count_subscribers("topic") == 0) {
@@ -46,13 +81,23 @@ class MinimalPublisher : public rclcpp::Node {
   }
 
  private:
+ /**
+  * @brief timer callback to publish message
+  * 
+  */
   void timer_callback() {
     auto message = std_msgs::msg::String();
     message.data = std::to_string(count_++) + ") " + base_message;
-    RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.data.c_str());
+    RCLCPP_WARN_STREAM(this->get_logger(), "Publishing: " 
+    << message.data.c_str());
     publisher_->publish(message);
   }
-
+/**
+ * @brief basic request-response to add two integers
+ * 
+ * @param request server request
+ * @param response server response
+ */
   void add_two_integers(const std::shared_ptr<example_interfaces
   ::srv::AddTwoInts::Request> request,
           std::shared_ptr<example_interfaces
@@ -61,6 +106,10 @@ class MinimalPublisher : public rclcpp::Node {
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"),
   "Incoming request\na: %ld" " b: %ld",
                 request->a, request->b);
+  if(response->sum > INT32_MAX){
+  RCLCPP_ERROR_STREAM(this->get_logger(), 
+  "value overflow!");
+    }
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"),
   "sending back response: [%ld]", (long int)response->sum);
   base_message = "The sum is: " + std::to_string(response->sum);
