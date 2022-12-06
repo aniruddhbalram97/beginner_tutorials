@@ -112,7 +112,17 @@ ros2 bag play saved_bag
 ros2 launch cpp_pubsub pub_sub_service.launch.yaml freq:=1 record_bag:=true
 ```
 
-### 5) Running ROS Test
+### 5) Playing bag file and listener node
+In a terminal, run the recorded bag file
+```
+ros2 bag play saved_bag --loop
+```
+
+In a new terminal, run the listener
+```
+ros2 run cpp_pubsub listener
+```
+## Running ROS Test
 
 Build the package:
 ```
