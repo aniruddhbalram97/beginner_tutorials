@@ -6,6 +6,10 @@ launch:
     name: "freq"
     default: "1.0"
 
+- arg:
+    name: "record_bag"
+    default: "false"
+
 # to start publisher node 
 - node:
     pkg: "cpp_pubsub"
@@ -23,9 +27,7 @@ launch:
     name: "sim"
     namespace: "minimal_subscriber"
 
--node:
-    pkg: "ros2bag"
-    exec: "record"
-    name: "bag_recording"
-    namespace: "ros2bag"
-    args: "-a"
+# bag record
+- executable:
+    cmd: "ros2 bag record -a -o saved_bag"
+    if: $(var record_bag)

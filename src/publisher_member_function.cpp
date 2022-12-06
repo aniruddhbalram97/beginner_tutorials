@@ -27,7 +27,7 @@
 /**
  *  @file    publisher_member_function.cpp
  *  @author  Aniruddh Balram
- *  @date    11/16/2022
+ *  @date    12/05/2022
  *  @version 2.0
  *
  *  @brief This file is a combined publisher/server
@@ -61,7 +61,7 @@ class MinimalPublisher : public rclcpp::Node {
     // Parameter for publisher frequency
     auto freq_p = rcl_interfaces::msg::ParameterDescriptor();
     freq_p.description = "Sets the frequency in Hz";
-    this->declare_parameter("freq",3.0,freq_p);
+    this->declare_parameter("freq", 3.0, freq_p);
     auto frequency =
       this->get_parameter("freq").
       get_parameter_value().get<std::float_t>();
@@ -94,13 +94,16 @@ class MinimalPublisher : public rclcpp::Node {
   void timer_callback() {
     auto message = std_msgs::msg::String();
     message.data = std::to_string(count_++) + ") " + base_message;
-    RCLCPP_WARN_STREAM(this->get_logger(), "Publishing: " 
+    RCLCPP_WARN_STREAM(this->get_logger(), "Publishing: "
     << message.data.c_str());
     publisher_->publish(message);
     handle_pose();
   }
-  void handle_pose()
-  {
+  /**
+   * @brief function to obtain the TF Messages
+   * 
+   */
+  void handle_pose() {
     geometry_msgs::msg::TransformStamped t;
 
     // Read message content and assign it to
@@ -119,7 +122,7 @@ class MinimalPublisher : public rclcpp::Node {
     // and this why we set rotation in x and y to 0 and obtain
     // rotation in z axis from the message
     tf2::Quaternion q;
-    q.setRPY(3.14, 2.1,1.7);
+    q.setRPY(3.14, 2.1, 1.7);
     t.transform.rotation.x = q.x();
     t.transform.rotation.y = q.y();
     t.transform.rotation.z = q.z();
@@ -142,8 +145,8 @@ class MinimalPublisher : public rclcpp::Node {
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"),
   "Incoming request\na: %ld" " b: %ld",
                 request->a, request->b);
-  if(response->sum > INT32_MAX){
-  RCLCPP_ERROR_STREAM(this->get_logger(), 
+  if(response->sum > INT32_MAX) {
+  RCLCPP_ERROR_STREAM (this->get_logger(),
   "value overflow!");
     }
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"),

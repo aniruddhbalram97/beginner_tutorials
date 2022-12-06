@@ -49,6 +49,17 @@ if(BUILD_TESTING)
   find_package(rclcpp REQUIRED)
   find_package(std_msgs REQUIRED)
 
+  # the following lines skip linters
+  #set(ament_cmake_cppcheck_FOUND TRUE)
+  #set(ament_cmake_copyright_FOUND TRUE)
+  #set(ament_cmake_cpplint_FOUND TRUE)
+  #set(ament_cmake_flake8_FOUND TRUE)
+  #set(ament_cmake_uncrustify_FOUND TRUE)
+  #ament_lint_auto_find_test_dependencies()
+
+  # Run all lint tests in package.xml except those listed above
+  #ament_lint_auto_find_test_dependencies()
+
   # Add a gtest executable
   set(TESTFILES
     test/run_test.cpp

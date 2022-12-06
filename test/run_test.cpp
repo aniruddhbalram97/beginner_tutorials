@@ -30,7 +30,7 @@
  *  @date    12/5/2022
  *  @version 1.0
  *
- *  @brief This file implements a ROS2 level 2 test 
+ *  @brief Implementation of ROS2 level test
  *
  */
 #include <stdlib.h>
