@@ -28,6 +28,7 @@ cd src/
 git clone https://github.com/aniruddhbalram97/beginner_tutorials.git
 cd ..
 colcon build --packages-select cpp_pubsub
+. install/setup.bash
 ```
 
 ### Run:
@@ -68,4 +69,58 @@ The results are present in <your_package>/results folder.
 Once both talker/listener nodes are running, run the following command:
 ```
 ros2 run rqt_console rqt_console
+```
+
+## Transformation Inspection TF2
+
+### 1) Viewframes to produce a pdf
+```
+ros2 run tf2_tools view_frames
+```
+### 2) TF2 Echo
+In a terminal run the following when you are publisher is already running:
+```
+ros2 run tf2_ros tf2_echo world talk
+```
+
+## Bag Files
+
+### 1) Recording a bag file:
+
+Run the following command to record a bag for all topics
+```
+ros2 bag record -a -o saved_bag
+```
+
+### 2) Information on bag file:
+
+Run the following command to get information on a bag file
+```
+ros2 bag info saved_bag
+```
+
+### 3) To play the bag file:
+
+Run the following command to play the bag file
+```
+ros2 bag play saved_bag
+```
+
+### 4) Record a bag file using launch file:
+
+```
+ros2 launch cpp_pubsub pub_sub_service.launch.yaml freq:=1 record_bag:=true
+```
+
+### 5) Running ROS Test
+
+Build the package:
+```
+colcon build --packages-select cpp_pubsub
+```
+
+Run the test:
+
+```
+colcon test --event-handlers console_direct+ --packages-select cpp_pubsub
 ```
