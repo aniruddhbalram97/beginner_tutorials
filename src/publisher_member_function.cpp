@@ -42,6 +42,9 @@
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
 #include "example_interfaces/srv/add_two_ints.hpp"
+#include "geometry_msgs/msg/transform_stamped.hpp"
+#include "tf2/LinearMath/Quaternion.h"
+#include "tf2_ros/transform_broadcaster.h"
 
 using namespace std::chrono_literals;
 
@@ -78,6 +81,9 @@ class MinimalPublisher : public rclcpp::Node {
     RCLCPP_WARN_STREAM(this->get_logger(), "There is no-one subscribing!");
   }
     this->get_logger().set_level(rclcpp::Logger::Level::Debug);
+     // Initialize the transform broadcaster
+    tf_broadcaster_ =
+      std::make_unique<tf2_ros::TransformBroadcaster>(*this);
   }
 
  private:
@@ -91,6 +97,36 @@ class MinimalPublisher : public rclcpp::Node {
     RCLCPP_WARN_STREAM(this->get_logger(), "Publishing: " 
     << message.data.c_str());
     publisher_->publish(message);
+    handle_pose();
+  }
+  void handle_pose()
+  {
+    geometry_msgs::msg::TransformStamped t;
+
+    // Read message content and assign it to
+    // corresponding tf variables
+    t.header.stamp = this->get_clock()->now();
+    t.header.frame_id = "world";
+    t.child_frame_id = "talk";
+
+    // Turtle only exists in 2D, thus we get x and y translation
+    // coordinates from the message and set the z coordinate to 0
+    t.transform.translation.x = 1.2;
+    t.transform.translation.y = 2.0;
+    t.transform.translation.z = 3.0;
+
+    // For the same reason, turtle can only rotate around one axis
+    // and this why we set rotation in x and y to 0 and obtain
+    // rotation in z axis from the message
+    tf2::Quaternion q;
+    q.setRPY(3.14, 2.1,1.7);
+    t.transform.rotation.x = q.x();
+    t.transform.rotation.y = q.y();
+    t.transform.rotation.z = q.z();
+    t.transform.rotation.w = q.w();
+
+    // Send the transformation
+    tf_broadcaster_->sendTransform(t);
   }
 /**
  * @brief basic request-response to add two integers
@@ -119,6 +155,7 @@ class MinimalPublisher : public rclcpp::Node {
   ::SharedPtr publisher_;
   rclcpp::Service<example_interfaces::srv::AddTwoInts>
   ::SharedPtr service_;
+  std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
   size_t count_;
 };
 

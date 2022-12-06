@@ -15,6 +15,10 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(example_interfaces REQUIRED)
+find_package(geometry_msgs)
+find_package(tf2)
+find_package(tf2_ros)
+find_package(tf2_geometry_msgs)
 # publisher/subscriber executables
 add_executable(talker src/publisher_member_function.cpp)
 add_executable(listener src/subscriber_member_function.cpp)
@@ -22,7 +26,7 @@ add_executable(listener src/subscriber_member_function.cpp)
 #add_executable(server src/add_two_ints_server.cpp)
 add_executable(client src/add_two_ints_client.cpp)
 # publisher/subscriber executables
-ament_target_dependencies(talker rclcpp std_msgs example_interfaces)
+ament_target_dependencies(talker rclcpp std_msgs example_interfaces geometry_msgs tf2 tf2_ros tf2_geometry_msgs)
 ament_target_dependencies(listener rclcpp std_msgs)
 # server/client dependencies
 #ament_target_dependencies(server rclcpp example_interfaces)
@@ -33,6 +37,11 @@ install(TARGETS
   #server
   client
   DESTINATION lib/${PROJECT_NAME})
+
+install(
+  DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
